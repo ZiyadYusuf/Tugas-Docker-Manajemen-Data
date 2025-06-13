@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Nama File: 3324600001_backup.sh
+# Deskripsi: Backup home dir dengan rotasi 10 file, tiap 15s, selama 1 jam.
+
+SOURCE_DIR="$HOME"
+BACKUP_DEST="/tmp/my_backups"
+MAX_BACKUPS=10
+INTERVAL=15
+DURATION_SECONDS=$((1 * 3600)) # 1 jam
+
+mkdir -p "$BACKUP_DEST" || exit 1
+
+echo "--- Backup $SOURCE_DIR ke $BACKUP_DEST ($MAX_BACKUPS file rotasi, tiap $INTERVALs, total 1 jam) ---"
+
+CURRENT_FILE=1
+START_TIME=$SECONDS
+
+while [ $((SECONDS - START_TIME)) -lt "$DURATION_SECONDS" ]; do
+    BACKUP_PATH="${BACKUP_DEST}/file${CURRENT_FILE}.tar.gz"
+
+    echo "[$(date +'%H:%M:%S')] Backup ke $BACKUP_PATH"
+    tar -czf "$BACKUP_PATH" -C "$(dirname "$SOURCE_DIR")" "$(basename "$SOURCE_DIR")" &>/dev/null
+
+    if [ $? -eq 0 ]; then
+        echo "  OK. Ukuran: $(du -sh "$BACKUP_PATH" | awk '{print $1}')"
+    else
+        echo "  Gagal."
+    fi
+
+    CURRENT_FILE=$((CURRENT_FILE + 1))
+    if [ "$CURRENT_FILE" -gt "$MAX_BACKUPS" ]; then
+        CURRENT_FILE=1
+    fi
+
+    sleep "$INTERVAL"
+done
+
+echo "--- Backup selesai setelah 1 jam ---"
+exit 0

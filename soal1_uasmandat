@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Nama File: 3324600001_UASMandat1.sh
+# Deskripsi: Memonitor status service SSH setiap 10 detik.
+
+SERVICE_NAME="ssh"
+INTERVAL=10
+
+# Loop utama untuk pengecekan berkala
+while true; do
+    clear # Membersihkan layar
+    echo "--- MONITORING SERVICE ${SERVICE_NAME^^} ---"
+    echo "Pengecekan setiap $INTERVAL detik. Tekan Ctrl+C untuk keluar."
+    echo "-------------------------------------------------"
+
+    # Cek status service SSH. Exit status 0 jika aktif, 1 jika tidak.
+    systemctl is-active --quiet ${SERVICE_NAME}.service
+
+    if [ $? -eq 0 ]; then
+        echo "[$(date +'%Y-%m-%d %H:%M:%S')] Service ${SERVICE_NAME} AKTIF."
+    else
+        echo "[$(date +'%Y-%m-%d %H:%M:%S')] !!! PERINGATAN: Service ${SERVICE_NAME} MATI !!!"
+        echo "==================================================="
+        echo "!!! HARAP SEGERA PERIKSA SERVICE ${SERVICE_NAME} !!!"
+        echo "==================================================="
+    fi
+
+    sleep "$INTERVAL" # Jeda waktu
+done

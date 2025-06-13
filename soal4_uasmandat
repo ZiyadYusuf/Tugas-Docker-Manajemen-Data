@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Nama File: 3324600001_filter.sh
+# Deskripsi: Memfilter file /etc/passwd untuk mendapatkan user dengan home dir dan namanya.
+
+PASSWD_FILE="/etc/passwd"
+
+echo "--- Tampilan Awal File ${PASSWD_FILE} (Beberapa Baris Pertama) ---"
+head -n 10 "$PASSWD_FILE" # Menampilkan 10 baris pertama untuk contoh
+echo ""
+
+echo "--- Filter Tahap 1: Baris dengan Home Direktori (/home/) ---"
+# Kolom ke-6 di /etc/passwd adalah home directory.
+# Kita mencari baris di mana kolom ke-6 dimulai dengan /home/
+awk -F: '$6 ~ /^\/home\// {print}' "$PASSWD_FILE"
+echo ""
+
+echo "--- Filter Tahap 2: Hanya Nama User dari Hasil Filter Tahap 1 ---"
+# Dari hasil sebelumnya, kita hanya ambil kolom pertama (username).
+awk -F: '$6 ~ /^\/home\// {print $1}' "$PASSWD_FILE"
+echo ""
+
+echo "--- Filter Selesai ---"

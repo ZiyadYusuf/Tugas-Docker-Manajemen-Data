@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Nama File: 3324600001_max_suhu.sh
+# Deskripsi: Mencari nilai suhu maksimum dari data.txt.
+# Kode 1 max suhu
+
+DATA_FILE="data.txt"
+
+# Awk script untuk mencari suhu maksimum
+# BEGIN: Inisialisasi variabel max_suhu ke 0 sebelum memproses file.
+# NR > 1: Lewati baris header (baris pertama).
+# { if ($2 > max_suhu) max_suhu = $2 }: Jika kolom ke-2 (suhu) lebih besar dari max_suhu saat ini, update max_suhu.
+# END: Setelah semua baris diproses, cetak hasilnya.
+awk 'BEGIN {max_suhu = 0} NR > 1 { if ($2 > max_suhu) max_suhu = $2 } END { printf "Suhu maksimum: %.1f\n", max_suhu }' "$DATA_FILE"

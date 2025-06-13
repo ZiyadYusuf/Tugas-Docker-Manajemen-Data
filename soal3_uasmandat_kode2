@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Nama File: 3324600001_avg_kelembaban.sh
+# Deskripsi: Menghitung rata-rata nilai kelembaban dari data.txt.
+
+DATA_FILE="data.txt"
+
+# Awk script untuk menghitung rata-rata kelembaban
+# BEGIN: Inisialisasi sum_kelembaban dan count_kelembaban.
+# NR > 1: Lewati baris header.
+# { sum_kelembaban += $3; count_kelembaban++ }: Tambahkan kolom ke-3 (kelembaban) ke sum dan tingkatkan counter.
+# END: Hitung rata-rata dan cetak hasilnya.
+awk 'BEGIN {sum_kelembaban = 0; count_kelembaban = 0} NR > 1 { sum_kelembaban += $3; count_kelembaban++ } END { if (count_kelembaban > 0) printf "Rata-rata kelembaban: %.1f\n", sum_kelembaban / count_kelembaban; else print "Tidak ada data kelembaban yang valid." }' "$DATA_FILE"
